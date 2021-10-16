@@ -78,24 +78,4 @@ function deleteTodo(PDO $pdo)
     $stmt->execute();
 }
 
-//
-// token
-//
 
-function createToken()
-{
-    if (isset($_SESSION['token'])) {
-        return;
-    }
-    $_SESSION['token'] = bin2hex(random_bytes(32));
-}
-
-function validateToken()
-{
-    if (
-        empty($_SESSION['token']) ||
-        filter_input(INPUT_POST, 'token') !== $_SESSION['token']
-    ) {
-        exit('Invalid post request');
-    }
-}
