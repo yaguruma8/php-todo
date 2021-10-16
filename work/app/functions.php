@@ -1,11 +1,5 @@
 <?php
 
-// html helper
-function h($str)
-{
-    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-}
-
 //
 // Database
 //
