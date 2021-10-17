@@ -4,7 +4,7 @@ require_once __DIR__ . '/../app/config.php';
 
 Token::create();
 
-$pdo = getPdoInstance();
+$pdo = Database::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     Token::validate();
