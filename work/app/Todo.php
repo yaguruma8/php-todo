@@ -6,7 +6,7 @@ class Todo
 {
     private $pdo;
 
-    public function __construct(\PDO $pdo)
+    public function __construct(\PDO$pdo)
     {
         $this->pdo = $pdo;
         Token::create();
@@ -28,7 +28,11 @@ class Todo
                 case 'delete':
                     $this->delete();
                     break;
+                case 'purge':
+                    $this->purge();
+                    break;
                 default:
+                    echo 'invalid post';
                     exit;
             }
             header('Location: ' . SITE_URL);
@@ -81,5 +85,10 @@ class Todo
         );
         $stmt->bindValue('id', $id, \PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    private function purge()
+    {
+        $this->pdo->query("DELETE FROM todos WHERE is_done = 1");
     }
 }
