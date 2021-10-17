@@ -2,34 +2,38 @@
 
 class Todo
 {
+    private $pdo;
 
-    public function add(PDO $pdo)
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function add()
     {
         $title = trim(filter_input(INPUT_POST, 'title'));
         if ($title === '') {
             return;
         }
-        $stmt = $pdo->prepare(
+        $stmt = $this->pdo->prepare(
             "INSERT INTO todos (title) VALUES (:title)"
         );
         $stmt->bindValue('title', $title, PDO::PARAM_STR);
         $stmt->execute();
     }
 
-// read
-    public function getAll(PDO $pdo)
+    public function getAll()
     {
-        return $pdo->query("SELECT * FROM todos ORDER BY id DESC;")->fetchAll();
+        return $this->pdo->query("SELECT * FROM todos ORDER BY id DESC;")->fetchAll();
     }
 
-// Update
-    public function toggle(PDO $pdo)
+    public function toggle()
     {
         $id = filter_input(INPUT_POST, 'id');
         if (empty($id)) {
             return;
         }
-        $stmt = $pdo->prepare(
+        $stmt = $this->pdo->prepare(
             "UPDATE todos
         SET is_done = NOT is_done
         WHERE id = :id"
@@ -38,14 +42,13 @@ class Todo
         $stmt->execute();
     }
 
-//delete
-    public function delete(PDO $pdo)
+    public function delete()
     {
         $id = filter_input(INPUT_POST, 'id');
         if (empty($id)) {
             return;
         }
-        $stmt = $pdo->prepare(
+        $stmt = $this->pdo->prepare(
             "DELETE FROM todos
         WHERE id = :id"
         );

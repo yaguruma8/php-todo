@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/config.php';
 Token::create();
 
 $pdo = Database::getInstance();
-$todo = new Todo();
+$todo = new Todo($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     Token::validate();
@@ -13,13 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = filter_input(INPUT_GET, 'action');
     switch ($action) {
         case 'add':
-            $todo->add($pdo);
+            $todo->add();
             break;
         case 'toggle':
-            $todo->toggle($pdo);
+            $todo->toggle();
             break;
         case 'delete':
-            $todo->delete($pdo);
+            $todo->delete();
             break;
         default:
             exit;
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 }
 
-$todos = $todo->getAll($pdo);
+$todos = $todo->getAll();
 
 ?>
 
