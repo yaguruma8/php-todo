@@ -22,7 +22,15 @@
       if (!confirm('削除しますか？')) {
         return;
       }
-      deleteButton.parentNode.submit();
+      fetch('?action=delete', {
+        method: 'POST',
+        body: new URLSearchParams({
+          id: deleteButton.dataset.id,
+          token: deleteButton.dataset.token,
+        }),
+      });
+      deleteButton.parentNode.remove();
+      // deleteButton.parentNode.submit();
     });
   });
 
