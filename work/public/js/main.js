@@ -2,6 +2,28 @@
 
 {
   const token = document.querySelector('main').dataset.token;
+  const input = document.querySelector('.add > input[name="title"]');
+
+  input.focus();
+
+  const addForm = document.querySelector('.add');
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = input.value;
+    fetch('?action=add', {
+      method: 'POST',
+      body: new URLSearchParams({
+        title,
+        token,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json.id);
+      });
+    input.value = '';
+    input.focus();
+  });
 
   const toggleBoxes = document.querySelectorAll('.toggle');
   toggleBoxes.forEach((toggleBox) => {
@@ -49,10 +71,10 @@
     });
 
     const lis = document.querySelectorAll('li');
-    lis.forEach(li => {
+    lis.forEach((li) => {
       if (li.firstElementChild.checked) {
         li.remove();
       }
-    })
+    });
   });
 }

@@ -30,10 +30,10 @@ $todos = $todo->getAll();
       <span class="purge">Purge</span>
     </header>
 
-    <form action="?action=add" method="post">
+    <form class="add">
       <input type="text" name="title" placeholder="input new todo">
-      <input type="hidden" name="token" value="<?=Utils::h($_SESSION['token']);?>">
     </form>
+    
     <ul>
       <?php foreach ($todos as $todo): ?>
         <li data-id="<?=Utils::h($todo->id);?>">
