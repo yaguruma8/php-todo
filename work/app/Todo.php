@@ -35,7 +35,7 @@ class Todo
                     echo 'invalid post';
                     exit;
             }
-            header('Location: ' . SITE_URL);
+            // header('Location: ' . SITE_URL);
             exit;
         }
     }
