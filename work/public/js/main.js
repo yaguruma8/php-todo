@@ -11,7 +11,7 @@
           token: toggleBox.dataset.token,
         }),
       });
-      toggleBox.nextElementSibling.classList.toggle('done');
+      // toggleBox.nextElementSibling.classList.toggle('done');
       // toggleBox.parentNode.submit();
     });
   });

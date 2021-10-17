@@ -58,15 +58,11 @@ li:nth-child(even) {
 }
 
 .toggle {
-  margin-right: 8px;
-
-}
-.toggle-form {
   margin: auto 0;
-
+  margin-right: 8px;
 }
 
-.done {
+.toggle:checked + span {
   color: gray;
   text-decoration: line-through;
 }
