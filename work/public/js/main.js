@@ -1,18 +1,20 @@
 'use strict';
 
 {
+  const token = document.querySelector('main').dataset.token;
+
   const toggleBoxes = document.querySelectorAll('.toggle');
   toggleBoxes.forEach((toggleBox) => {
     toggleBox.addEventListener('change', () => {
+      const id = toggleBox.parentNode.dataset.id;
       fetch('?action=toggle', {
         method: 'POST',
         body: new URLSearchParams({
-          id: toggleBox.dataset.id,
-          token: toggleBox.dataset.token,
+          id,
+          token,
         }),
       });
       // toggleBox.nextElementSibling.classList.toggle('done');
-      // toggleBox.parentNode.submit();
     });
   });
 
@@ -22,15 +24,15 @@
       if (!confirm('削除しますか？')) {
         return;
       }
+      const id = deleteButton.parentNode.dataset.id;
       fetch('?action=delete', {
         method: 'POST',
         body: new URLSearchParams({
-          id: deleteButton.dataset.id,
-          token: deleteButton.dataset.token,
+          id,
+          token,
         }),
       });
       deleteButton.parentNode.remove();
-      // deleteButton.parentNode.submit();
     });
   });
 
@@ -42,7 +44,7 @@
     fetch('?action=purge', {
       method: 'POST',
       body: new URLSearchParams({
-        token: purgeButton.dataset.token,
+        token,
       }),
     });
 
@@ -52,6 +54,5 @@
         li.remove();
       }
     })
-    // purgeButton.parentNode.submit();
   });
 }

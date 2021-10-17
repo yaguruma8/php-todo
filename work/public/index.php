@@ -24,13 +24,10 @@ $todos = $todo->getAll();
   <script src="js/main.js" defer></script>
 </head>
 <body>
-  <main>
+  <main data-token="<?=Utils::h($_SESSION['token']);?>">
     <header>
       <h1>Todos</h1>
-      <span class="purge"
-        data-token="<?=Utils::h($_SESSION['token']);?>">
-        Purge
-      </span>
+      <span class="purge">Purge</span>
     </header>
 
     <form action="?action=add" method="post">
@@ -39,21 +36,14 @@ $todos = $todo->getAll();
     </form>
     <ul>
       <?php foreach ($todos as $todo): ?>
-        <li>
-          <input type="checkbox" class="toggle" 
-            data-id="<?=Utils::h($todo->id);?>"
-            data-token="<?=Utils::h($_SESSION['token']);?>"
-            <?=$todo->is_done ? 'checked' : '';?> >
+        <li data-id="<?=Utils::h($todo->id);?>">
+          <input type="checkbox" class="toggle" <?=$todo->is_done ? 'checked' : '';?> >
 
           <span class="<?=$todo->is_done ? 'done' : '';?>">
             <?=Utils::h($todo->title);?>
           </span>
 
-          <span class="delete"
-            data-id="<?=Utils::h($todo->id);?>"
-            data-token="<?=Utils::h($_SESSION['token']);?>">
-            X
-          </span>
+          <span class="delete">X</span>
 
         </li>
       <?php endforeach;?>
