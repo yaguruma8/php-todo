@@ -68,11 +68,9 @@ li:nth-child(even) {
 }
 
 .delete {
-  color: #999;
-  cursor: pointer;
-}
-.delete-form {
   margin: auto 0;
   margin-left: auto;
   padding-left: 8px;
+  color: #999;
+  cursor: pointer;
 }

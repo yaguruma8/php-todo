@@ -50,11 +50,12 @@ $todos = $todo->getAll();
             <?=Utils::h($todo->title);?>
           </span>
 
-          <form action="?action=delete" method="post" class="delete-form">
-            <span class="delete">X</span>
-            <input type="hidden" name="id" value="<?=$todo->id?>">
-            <input type="hidden" name="token" value="<?=Utils::h($_SESSION['token']);?>">
-          </form>
+          <span class="delete"
+            data-id="<?=Utils::h($todo->id);?>"
+            data-token="<?=Utils::h($_SESSION['token']);?>">
+            X
+          </span>
+
         </li>
       <?php endforeach;?>
     </ul>
