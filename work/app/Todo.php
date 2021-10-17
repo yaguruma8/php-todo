@@ -7,6 +7,7 @@ class Todo
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+        Token::create();
     }
 
     public function processPost()
@@ -33,7 +34,12 @@ class Todo
         }
     }
 
-    public function add()
+    public function getAll()
+    {
+        return $this->pdo->query("SELECT * FROM todos ORDER BY id DESC;")->fetchAll();
+    }
+
+    private function add()
     {
         $title = trim(filter_input(INPUT_POST, 'title'));
         if ($title === '') {
@@ -46,12 +52,7 @@ class Todo
         $stmt->execute();
     }
 
-    public function getAll()
-    {
-        return $this->pdo->query("SELECT * FROM todos ORDER BY id DESC;")->fetchAll();
-    }
-
-    public function toggle()
+    private function toggle()
     {
         $id = filter_input(INPUT_POST, 'id');
         if (empty($id)) {
@@ -66,7 +67,7 @@ class Todo
         $stmt->execute();
     }
 
-    public function delete()
+    private function delete()
     {
         $id = filter_input(INPUT_POST, 'id');
         if (empty($id)) {
