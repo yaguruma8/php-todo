@@ -11,10 +11,21 @@ main {
   width: 320px;
   margin: 32px auto;
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
 h1 {
   font-size: 24px;
   text-align: center;
   margin: 0 0 16px;
+}
+
+.purge {
+  color: #999;
+  cursor: pointer;
 }
 
 input[type="text"] {
@@ -22,13 +33,11 @@ input[type="text"] {
   padding: 4px;
   box-sizing: border-box;
   margin-bottom: 16px;
-  font-size: 20px;
   border: 0;
   border-bottom: 1px solid gray;
 }
 
 input[type="text"]::placeholder {
-  font-size: 16px;
   color: #999;
 }
 
