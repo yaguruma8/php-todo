@@ -1,5 +1,7 @@
 <?php
 
+namespace Myapp;
+
 class Utils
 {
     public static function h($str)
