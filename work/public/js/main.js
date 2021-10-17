@@ -39,6 +39,19 @@
     if (!confirm('完了済todoをまとめて削除しますか？')) {
       return;
     }
-    purgeButton.parentNode.submit();
+    fetch('?action=purge', {
+      method: 'POST',
+      body: new URLSearchParams({
+        token: purgeButton.dataset.token,
+      }),
+    });
+
+    const lis = document.querySelectorAll('li');
+    lis.forEach(li => {
+      if (li.firstElementChild.checked) {
+        li.remove();
+      }
+    })
+    // purgeButton.parentNode.submit();
   });
 }
