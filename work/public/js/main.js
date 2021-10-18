@@ -25,7 +25,6 @@
     addTodo(json.id, title);
     input.value = '';
     input.focus();
-    console.log('finish!');
   });
 
   function addTodo(id, title) {
@@ -48,6 +47,7 @@
     if (e.target.classList.contains('delete')) {
       deleteTodo(e.target);
     }
+    e.stopPropagation();
   });
 
   function toggleTodo(target) {
