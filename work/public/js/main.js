@@ -29,7 +29,7 @@
   });
 
   function addTodo(id, title) {
-    const li =element`
+    const li = element`
     <li data-id="${id}">
       <input type="checkbox" class="toggle">
       <span>${title}</span>
@@ -40,38 +40,41 @@
     ul.insertBefore(li, ul.firstChild);
   }
 
-  const toggleBoxes = document.querySelectorAll('.toggle');
-  toggleBoxes.forEach((toggleBox) => {
-    toggleBox.addEventListener('change', () => {
-      const id = toggleBox.parentNode.dataset.id;
-      fetch('?action=toggle', {
-        method: 'POST',
-        body: new URLSearchParams({
-          id,
-          token,
-        }),
-      });
-      // toggleBox.nextElementSibling.classList.toggle('done');
-    });
+  const ul = document.querySelector('ul');
+  ul.addEventListener('click', (e) => {
+    if (e.target.classList.contains('toggle')) {
+      toggleTodo(e.target);
+    }
+    if (e.target.classList.contains('delete')) {
+      deleteTodo(e.target);
+    }
   });
 
-  const deleteButtons = document.querySelectorAll('.delete');
-  deleteButtons.forEach((deleteButton) => {
-    deleteButton.addEventListener('click', () => {
-      if (!confirm('削除しますか？')) {
-        return;
-      }
-      const id = deleteButton.parentNode.dataset.id;
-      fetch('?action=delete', {
-        method: 'POST',
-        body: new URLSearchParams({
-          id,
-          token,
-        }),
-      });
-      deleteButton.parentNode.remove();
+  function toggleTodo(target) {
+    const id = target.parentNode.dataset.id;
+    fetch('?action=toggle', {
+      method: 'POST',
+      body: new URLSearchParams({
+        id,
+        token,
+      }),
     });
-  });
+  }
+
+  function deleteTodo(target) {
+    if (!confirm('削除しますか？')) {
+      return;
+    }
+    const id = target.parentNode.dataset.id;
+    fetch('?action=delete', {
+      method: 'POST',
+      body: new URLSearchParams({
+        id,
+        token,
+      }),
+    });
+    target.parentNode.remove();
+  }
 
   const purgeButton = document.querySelector('.purge');
   purgeButton.addEventListener('click', () => {
@@ -111,12 +114,11 @@
 
   function element(strings, ...values) {
     const htmlString = strings.reduce((result, currentStr, i) => {
-      return result + escapeSpecialChars(String(values[i - 1])) + currentStr
+      return result + escapeSpecialChars(String(values[i - 1])) + currentStr;
     });
+
     const temp = document.createElement('template');
     temp.innerHTML = htmlString;
-    
     return temp.content.firstElementChild;
   }
-
 }
