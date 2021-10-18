@@ -10,6 +10,10 @@
   addForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const title = input.value;
+    if (!title.trim()) {
+      input.value = '';
+      return;
+    }
     const res = await fetch('?action=add', {
       method: 'POST',
       body: new URLSearchParams({
@@ -18,11 +22,23 @@
       }),
     });
     const json = await res.json();
-    console.log(json.id);
+    addTodo(json.id, title);
     input.value = '';
     input.focus();
     console.log('finish!');
   });
+
+  function addTodo(id, title) {
+    const li =element`
+    <li data-id="${id}">
+      <input type="checkbox" class="toggle">
+      <span>${title}</span>
+      <span class="delete">X</span>
+    </li>
+    `;
+    const ul = document.querySelector('ul');
+    ul.insertBefore(li, ul.firstChild);
+  }
 
   const toggleBoxes = document.querySelectorAll('.toggle');
   toggleBoxes.forEach((toggleBox) => {
@@ -76,4 +92,31 @@
       }
     });
   });
+
+  // Utils
+  function escapeSpecialChars(str) {
+    const regSet = [
+      [/&/g, '&amp;'],
+      [/</g, '&lt;'],
+      [/>/g, '&gt;'],
+      [/"/g, '&quot;'],
+      [/'/g, '&#039;'],
+    ];
+    let escapeStr = str;
+    for (const [reg, entity] of regSet) {
+      escapeStr = escapeStr.replace(reg, entity);
+    }
+    return escapeStr;
+  }
+
+  function element(strings, ...values) {
+    const htmlString = strings.reduce((result, currentStr, i) => {
+      return result + escapeSpecialChars(String(values[i - 1])) + currentStr
+    });
+    const temp = document.createElement('template');
+    temp.innerHTML = htmlString;
+    
+    return temp.content.firstElementChild;
+  }
+
 }
