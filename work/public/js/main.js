@@ -7,22 +7,29 @@
   input.focus();
 
   const addForm = document.querySelector('.add');
-  addForm.addEventListener('submit', async function (e) {
+  addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const title = input.value;
     if (!title.trim()) {
       input.value = '';
       return;
     }
-    const res = await fetch('?action=add', {
-      method: 'POST',
-      body: new URLSearchParams({
-        title,
-        token,
-      }),
-    });
-    const json = await res.json();
-    addTodo(json.id, title);
+    try {
+      const res = await fetch('?action=add', {
+        method: 'POST',
+        body: new URLSearchParams({
+          title,
+          token,
+        }),
+      });
+      if (!res.ok) {
+        throw new Error('response is not ok.');
+      }
+      const json = await res.json();
+      addTodo(json.id, title);
+    } catch (err) {
+      console.error(err.message);
+    }
     input.value = '';
     input.focus();
   });
