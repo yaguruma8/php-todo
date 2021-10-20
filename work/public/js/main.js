@@ -65,6 +65,15 @@
         id,
         token,
       }),
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('該当のtodoはすでに削除されています');
+      }
+    })
+    .catch(err => {
+      window.alert(err.message);
+      location.reload();
     });
   }
 
@@ -117,6 +126,10 @@
       escapeStr = escapeStr.replace(reg, entity);
     }
     return escapeStr;
+    // return regSet.reduce(
+    //   (escapeStr, [reg, entity]) => escapeStr.replace(reg, entity),
+    //   str
+    // );
   }
 
   function element(strings, ...values) {
