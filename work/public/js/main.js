@@ -66,22 +66,22 @@
         token,
       }),
     })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error('該当のtodoはすでに削除されています');
-      }
-      return res.json()
-    })
-    .then(json => {
-      if (target.checked !== json.is_done) {
-        alert('このtodoはアップデートされています。画面を更新します');
-        target.checked = json.is_done;
-      }
-    })
-    .catch(err => {
-      window.alert(err.message);
-      location.reload();
-    });
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('該当のtodoはすでに削除されています');
+        }
+        return res.json();
+      })
+      .then((json) => {
+        if (target.checked !== json.is_done) {
+          alert('このtodoはアップデートされています。画面を更新します');
+          target.checked = json.is_done;
+        }
+      })
+      .catch((err) => {
+        window.alert(err.message);
+        location.reload();
+      });
   }
 
   function deleteTodo(target) {
@@ -128,15 +128,10 @@
       [/"/g, '&quot;'],
       [/'/g, '&#039;'],
     ];
-    let escapeStr = str;
-    for (const [reg, entity] of regSet) {
-      escapeStr = escapeStr.replace(reg, entity);
-    }
-    return escapeStr;
-    // return regSet.reduce(
-    //   (escapeStr, [reg, entity]) => escapeStr.replace(reg, entity),
-    //   str
-    // );
+    return regSet.reduce(
+      (escapeStr, [reg, entity]) => escapeStr.replace(reg, entity),
+      str
+    );
   }
 
   function element(strings, ...values) {
