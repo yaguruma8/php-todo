@@ -70,6 +70,13 @@
       if (!res.ok) {
         throw new Error('該当のtodoはすでに削除されています');
       }
+      return res.json()
+    })
+    .then(json => {
+      if (target.checked !== json.is_done) {
+        alert('このtodoはアップデートされています。画面を更新します');
+        target.checked = json.is_done;
+      }
     })
     .catch(err => {
       window.alert(err.message);

@@ -25,7 +25,9 @@ class Todo
                     echo json_encode(['id' => $id]);
                     break;
                 case 'toggle':
-                    $this->toggle();
+                    $isDone = $this->toggle();
+                    header('Content-Type: application/json');
+                    echo json_encode(['is_done' => $isDone]);
                     break;
                 case 'delete':
                     $this->delete();
@@ -37,7 +39,6 @@ class Todo
                     echo 'invalid post';
                     exit;
             }
-            // header('Location: ' . SITE_URL);
             exit;
         }
     }
@@ -67,6 +68,7 @@ class Todo
         if (empty($id)) {
             return;
         }
+        // 削除したtodoをチェックした場合->404
         $stmt = $this->pdo->prepare("SELECT * FROM todos WHERE id = :id");
         $stmt->bindValue('id', $id, \PDO::PARAM_INT);
         $stmt->execute();
@@ -83,6 +85,11 @@ class Todo
         );
         $stmt->bindValue('id', $id, \PDO::PARAM_INT);
         $stmt->execute();
+
+        // todoが存在した場合、該当のidの最新のis_doneの値は
+        // DB更新前に取得した$todoのis_doneを反転したものと等しい
+        // MySQLでは真偽値は1-0で管理しているためtrue-falseに変換する
+        return (boolean) !$todo->is_done;
     }
 
     private function delete()
