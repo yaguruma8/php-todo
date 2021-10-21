@@ -25,9 +25,7 @@ class Todo
                     echo json_encode(['id' => $id]);
                     break;
                 case 'toggle':
-                    $isDone = $this->toggle();
-                    header('Content-Type: application/json');
-                    echo json_encode(['is_done' => $isDone]);
+                    $this->toggle();
                     break;
                 case 'delete':
                     $this->delete();
@@ -77,19 +75,18 @@ class Todo
             header('HTTP', true, 404);
             exit;
         }
+        // フロント側のチェック状態にDBを合わせる
+        $checkFlag = filter_input(INPUT_POST, 'checkFlag', FILTER_VALIDATE_BOOLEAN);
 
         $stmt = $this->pdo->prepare(
             "UPDATE todos
-        SET is_done = NOT is_done
+        SET is_done = :checkFlag
         WHERE id = :id"
         );
+        $stmt->bindValue('checkFlag', $checkFlag, \PDO::PARAM_BOOL);
         $stmt->bindValue('id', $id, \PDO::PARAM_INT);
         $stmt->execute();
 
-        // todoが存在した場合、該当のidの最新のis_doneの値は
-        // DB更新前に取得した$todoのis_doneを反転したものと等しい
-        // MySQLでは真偽値は1-0で管理しているためtrue-falseに変換する
-        return (boolean) !$todo->is_done;
     }
 
     private function delete()

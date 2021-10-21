@@ -59,27 +59,27 @@
 
   function toggleTodo(target) {
     const id = target.parentNode.dataset.id;
+    // checkedの情報を送る
+    const checkFlag = target.checked;
+    console.log(checkFlag);
     fetch('?action=toggle', {
       method: 'POST',
       body: new URLSearchParams({
         id,
         token,
+        checkFlag,
       }),
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('該当のtodoはすでに削除されています');
-        }
-        return res.json();
-      })
-      .then((json) => {
-        if (target.checked !== json.is_done) {
-          alert('このtodoはアップデートされています。画面を更新します');
-          target.checked = json.is_done;
+          throw new Error('todo deleted already');
         }
       })
       .catch((err) => {
-        window.alert(err.message);
+        console.error(err.message);
+        window.alert(
+          '該当のtodoはすでに削除されています。画面を最新のデータに更新します。'
+        );
         location.reload();
       });
   }
