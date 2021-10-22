@@ -59,29 +59,28 @@
 
   function toggleTodo(target) {
     const id = target.parentNode.dataset.id;
+    // checkedの情報を送る
+    const checkFlag = target.checked;
     fetch('?action=toggle', {
       method: 'POST',
       body: new URLSearchParams({
         id,
         token,
+        checkFlag,
       }),
     })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error('該当のtodoはすでに削除されています');
-      }
-      return res.json()
-    })
-    .then(json => {
-      if (target.checked !== json.is_done) {
-        alert('このtodoはアップデートされています。画面を更新します');
-        target.checked = json.is_done;
-      }
-    })
-    .catch(err => {
-      window.alert(err.message);
-      location.reload();
-    });
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('todo deleted already');
+        }
+      })
+      .catch((err) => {
+        console.error(err.message);
+        window.alert(
+          '該当のtodoはすでに削除されています。画面を最新のデータに更新します。'
+        );
+        location.reload();
+      });
   }
 
   function deleteTodo(target) {
@@ -101,17 +100,43 @@
 
   const purgeButton = document.querySelector('.purge');
   purgeButton.addEventListener('click', () => {
-    if (!confirm('完了済todoをまとめて削除しますか？')) {
+    // フロント側のチェック済みidの配列を作成
+    const lis = document.querySelectorAll('li');
+    let appCheckedIds = [];
+    for (const li of lis) {
+      if (li.firstElementChild.checked) {
+        appCheckedIds.push(li.dataset.id);
+      }
+    }
+    // チェック済みidの数が0なら何もしない
+    if (!appCheckedIds.length) {
+      return;
+    }
+
+    if (!confirm('are you sure?')) {
       return;
     }
     fetch('?action=purge', {
       method: 'POST',
       body: new URLSearchParams({
         token,
+        appCheckedIds,
       }),
-    });
-
-    const lis = document.querySelectorAll('li');
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('failed to purge');
+        }
+      })
+      .catch((err) => {
+        console.error(err.message);
+        alert(
+          'データが更新されているためパージに失敗しました。画面を更新してください。'
+        );
+        location.reload();
+      });
+    // チェック済みtodoを削除する
+    // データに差異があればこの後のcatchのリロードで整合性をとる
     lis.forEach((li) => {
       if (li.firstElementChild.checked) {
         li.remove();
@@ -128,15 +153,10 @@
       [/"/g, '&quot;'],
       [/'/g, '&#039;'],
     ];
-    let escapeStr = str;
-    for (const [reg, entity] of regSet) {
-      escapeStr = escapeStr.replace(reg, entity);
-    }
-    return escapeStr;
-    // return regSet.reduce(
-    //   (escapeStr, [reg, entity]) => escapeStr.replace(reg, entity),
-    //   str
-    // );
+    return regSet.reduce(
+      (escapeStr, [reg, entity]) => escapeStr.replace(reg, entity),
+      str
+    );
   }
 
   function element(strings, ...values) {
