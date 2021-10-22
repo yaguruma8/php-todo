@@ -105,6 +105,22 @@ class Todo
 
     private function purge()
     {
+        // フロント側のチェック済みidの配列
+        $appCheckedIds = array_map(
+            function ($value) {return (int) $value;},
+            explode(',', filter_input(INPUT_POST, 'appCheckedIds'))
+        );
+        // DB側のis_doneがtrueであるidの配列
+        $dbIsDoneIds = $this->pdo->query(
+            "SELECT id FROM todos WHERE is_done = 1"
+        )->fetchAll(\PDO::FETCH_COLUMN);
+        // 差異があれば404を返して処理を終了
+        $diff = array_diff($dbIsDoneIds, $appCheckedIds);
+        if (count($appCheckedIds) !== count($dbIsDoneIds) || count($diff)) {
+            header('HTTP', true, 404);
+            exit;
+        }
+        // 差異がなければDBを削除する
         $this->pdo->query("DELETE FROM todos WHERE is_done = 1");
     }
 }
